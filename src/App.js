@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { userFetch } from './redux-modules/user';
 
 function App() {
+  const {loading, err, users} = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(userFetch());
+  }, []);
+
+  if(loading) return <div>로딩중...</div>
+  if(err) return <div>에러!</div>
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>
+          {user.name}
+        </li>
+      ))}
+    </ul>
   );
 }
 
